@@ -1,44 +1,34 @@
-# clj-queue-consumer-example
+# clj-rabbitmq-example
 
-FIXME: description
+Example project demonstrating how to produce to and consume from a queue in RabbitMQ.
 
-## Installation
-
-Download from http://example.com/FIXME.
+![build-badge](https://github.com/joakimen/clj-rabbitmq-example/actions/workflows/clojure.yml/badge.svg)
 
 ## Usage
 
-FIXME: explanation
+### 1. Start RabbitMQ-server
 
-    $ java -jar clj-queue-consumer-example-0.1.0-standalone.jar [args]
+```sh
+$ make start-rabbitmq
+```
 
-## Options
+### 2. Run application to produce and consume a message
 
-FIXME: listing of options this app accepts.
+```sh
+$ lein run
+[main] Connected. Channel id: 1
+[producer] Publishing message to joakimen.clj-queue-example.hello-queue
+[producer] Message was published to joakimen.clj-queue-example.hello-queue
+[main] Disconnecting...
+[consumer] Received a message: Hello!, delivery tag: 1, content type: text/plain, type: greetings.hi
+```
 
-## Examples
+## Managing RabbitMQ
 
-...
+The makefile-target `start-rabbitmq` will start a RabbitMQ-server in docker. The command forwards two ports; 
+* `5672` - The port Clojure will connect to during message exchange
+* `15672` - The port providing access to the management ui
 
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2021 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+To access the RabbitMQ Management UI, navigate to http://localhost:15672 in your browser.
+* user: `guest`
+* pass: `guest`
