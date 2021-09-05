@@ -1,4 +1,4 @@
-(ns clj-queue-consumer-example.core
+(ns clj-rabbitmq-example.core
   (:gen-class)
   (:require [langohr.core      :as rmq]
             [langohr.channel   :as lch]
@@ -21,8 +21,16 @@
         ch    (lch/open conn)
         qname "joakimen.clj-queue-example.hello-queue"]
     (println (format "[main] Connected. Channel id: %d" (.getChannelNumber ch)))
+
+    ;; create a queue
     (lq/declare ch qname {:exclusive false :auto-delete false})
+
+    ;; produce a message to it
+    (println "[producer] Publishing message to" qname)
     (lb/publish ch default-exchange-name qname "Hello!" {:content-type "text/plain" :type "greetings.hi"})
+    (println "[producer] Message was published to" qname)
+
+    ;; subscribe to queue
     (lc/subscribe ch qname message-handler {:auto-ack true})
 
     (println "[main] Disconnecting...")
