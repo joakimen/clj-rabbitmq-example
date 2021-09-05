@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: lein deps
+    
+    - name: Run tests
+      run: lein test
+    
+    - name: Build
+      run: lein uberjar
+    
+    - uses: DeLaGuardo/clojure-lint-action@master
+      with:
+        clj-kondo-args: --lint src
+        github_token: ${{ secrets.GITHUB_TOKEN }}
