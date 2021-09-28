@@ -9,6 +9,8 @@
 (def ^{:const true}
   default-exchange-name "")
 
+(def qname "joakimen.clj-queue-example.hello-queue")
+
 (defn message-handler
   [ch {:keys [content-type delivery-tag type] :as meta} ^bytes payload]
   (println (format "[consumer] Received a message: %s, delivery tag: %d, content type: %s, type: %s"
@@ -17,9 +19,9 @@
 
 (defn -main
   [& args]
-  (let [conn  (rmq/connect)
-        ch    (lch/open conn)
-        qname "joakimen.clj-queue-example.hello-queue"]
+
+  (with-open [conn  (rmq/connect)
+              ch    (lch/open conn)]
     (println (format "[main] Connected. Channel id: %d" (.getChannelNumber ch)))
 
     ;; create a queue
@@ -33,9 +35,7 @@
     ;; subscribe to queue
     (lc/subscribe ch qname message-handler {:auto-ack true})
 
-    (println "[main] Disconnecting...")
-    (rmq/close ch)
-    (rmq/close conn)))
+    (println "[main] Disconnecting...")))
 
 
 (comment
@@ -72,5 +72,3 @@
   (let [{:keys [conn ch qname]} (connect)]
     (lc/subscribe ch qname message-handler {:auto-ack true})
     (disconnect ch conn)))
-
-
